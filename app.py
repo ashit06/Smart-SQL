@@ -34,7 +34,7 @@ page = st.sidebar.radio("Navigate to:", ["Chat", "Visualize & Analyze"])
 
 # -------- Chat Page --------
 def run_chat_page():
-    st.title("🧠 PostgreSQL Chat Assistant")
+    st.title("🧠 Smart SQL Chat Assistant")
 
     # -- Sidebar: Connection --
     with st.sidebar:

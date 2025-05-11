@@ -1,4 +1,4 @@
-copyright: 2025 Your Arpit Agrahari
+copyright: 2025 Arpit Agrahari
 database connection string/URI : postgresql://postgres:1234@localhost:5432/test_chat_db
 
 -- Create database

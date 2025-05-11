@@ -1,0 +1,180 @@
+copyright: 2025 Your Arpit Agrahari
+database connection string/URI : postgresql://postgres:1234@localhost:5432/test_chat_db
+
+-- Create database
+CREATE DATABASE test_chat_db;
+
+-- Connect to database
+\c test_chat_db
+
+-- Create tables
+CREATE TABLE products (
+    product_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    category VARCHAR(50),
+    price DECIMAL(10,2),
+    stock_quantity INT
+);
+
+CREATE TABLE customers (
+    customer_id SERIAL PRIMARY KEY,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    join_date DATE DEFAULT CURRENT_DATE
+);
+
+CREATE TABLE sales (
+    sale_id SERIAL PRIMARY KEY,
+    product_id INT REFERENCES products(product_id),
+    customer_id INT REFERENCES customers(customer_id),
+    sale_date DATE NOT NULL,
+    quantity INT NOT NULL,
+    total_amount DECIMAL(10,2) NOT NULL,
+    region VARCHAR(50)
+);
+
+-- Insert sample data
+INSERT INTO products (name, category, price, stock_quantity) VALUES
+('Laptop Pro', 'Electronics', 1200.00, 50),
+('Smartphone X', 'Electronics', 800.00, 100),
+('Desk Chair', 'Furniture', 150.00, 30),
+('Coffee Maker', 'Appliances', 60.00, 40),
+('Wireless Headphones', 'Electronics', 120.00, 80);
+
+INSERT INTO customers (first_name, last_name, email, join_date) VALUES
+('John', 'Smith', 'john.smith@email.com', '2023-01-15'),
+('Sarah', 'Johnson', 'sarah.j@email.com', '2023-02-20'),
+('Mike', 'Brown', 'mike.b@email.com', '2023-03-10'),
+('Emily', 'Davis', 'emily.d@email.com', '2023-04-05'),
+('David', 'Wilson', 'david.w@email.com', '2023-05-12');
+
+INSERT INTO sales (product_id, customer_id, sale_date, quantity, total_amount, region) VALUES
+(1, 1, '2024-01-10', 1, 1200.00, 'North'),
+(2, 2, '2024-01-15', 2, 1600.00, 'South'),
+(3, 3, '2024-02-05', 1, 150.00, 'East'),
+(4, 4, '2024-02-20', 3, 180.00, 'West'),
+(1, 5, '2024-03-12', 1, 1200.00, 'North'),
+(2, 1, '2024-03-18', 1, 800.00, 'South'),
+(5, 2, '2024-04-01', 2, 240.00, 'East');
+
+
+3. Test Cases with Expected Inputs/Outputs
+
+Test Case 1: Basic Query
+Input: "Show all products"
+Expected SQL Output:
+
+sql
+
+SELECT * FROM products
+Expected Table Output:
+
+
+product_id |        name        |   category   | price  | stock_quantity
+-----------+--------------------+--------------+--------+---------------
+         1 | Laptop Pro         | Electronics  | 1200.00|            50
+         2 | Smartphone X       | Electronics  |  800.00|           100
+         3 | Desk Chair         | Furniture    |  150.00|            30
+         4 | Coffee Maker       | Appliances   |   60.00|            40
+         5 | Wireless Headphones| Electronics  |  120.00|            80
+Test Case 2: Filtered Query
+Input: "Show sales in North region"
+Expected SQL Output:
+
+sql
+Copy
+SELECT * FROM sales WHERE region = 'North'
+Expected Table Output:
+
+
+sale_id | product_id | customer_id | sale_date  | quantity | total_amount | region
+--------+------------+-------------+------------+----------+--------------+--------
+      1 |          1 |           1 | 2024-01-10 |        1 |      1200.00 | North
+      5 |          1 |           5 | 2024-03-12 |        1 |      1200.00 | North
+Test Case 3: Joined Tables
+Input: "Show customer names with their purchases"
+Expected SQL Output:
+
+sql
+Copy
+SELECT c.first_name, c.last_name, p.name AS product, s.sale_date, s.total_amount
+FROM sales s
+JOIN customers c ON s.customer_id = c.customer_id
+JOIN products p ON s.product_id = p.product_id
+Expected Table Output:
+
+
+postgresql://postgres:1234@localhost:5432/test_chat_db
+
+
+postgresql://custom_user:cust%21%40%23%24%25%5E%26%2A%28om_user@ep-winter-poetry-a57jcanb-pooler.us-east-2.aws.neon.tech/cohort?sslmode=require
+
+
+Copy
+first_name | last_name |      product      | sale_date  | total_amount
+-----------+-----------+-------------------+------------+-------------
+John       | Smith     | Laptop Pro        | 2024-01-10 |     1200.00
+Sarah      | Johnson   | Smartphone X      | 2024-01-15 |     1600.00
+Mike       | Brown     | Desk Chair        | 2024-02-05 |      150.00
+Emily      | Davis     | Coffee Maker      | 2024-02-20 |      180.00
+David      | Wilson    | Laptop Pro        | 2024-03-12 |     1200.00
+John       | Smith     | Smartphone X      | 2024-03-18 |      800.00
+Sarah      | Johnson   | Wireless Headphones|2024-04-01 |      240.00
+Test Case 4: Aggregation
+Input: "Show total sales by region"
+Expected SQL Output:
+
+sql
+Copy
+SELECT region, SUM(total_amount) AS total_sales
+FROM sales
+GROUP BY region
+Expected Table Output:
+
+Copy
+region | total_sales
+-------+------------
+North  |    2400.00
+South  |    2400.00
+East   |     390.00
+West   |     180.00
+Test Case 5: Complex Query
+Input: "Which electronics products have sold more than 1 unit?"
+Expected SQL Output:
+
+sql
+Copy
+SELECT p.name, SUM(s.quantity) AS total_units_sold
+FROM sales s
+JOIN products p ON s.product_id = p.product_id
+WHERE p.category = 'Electronics'
+GROUP BY p.name
+HAVING SUM(s.quantity) > 1
+Expected Table Output:
+
+Copy
+        name        | total_units_sold
+--------------------+-----------------
+Smartphone X        |               3
+Wireless Headphones |               2
+4. Testing Your Project
+Create the database using the setup commands above
+
+Use the connection string to connect your application
+
+Test with the sample queries
+
+Verify the outputs match the expected results
+
+This gives you a complete test environment with:
+
+Multiple related tables
+
+Enough data for meaningful queries
+
+Various query types (simple, filtered, joined, aggregated)
+
+Clear expected outputs for validation
+
+The database schema represents a typical e-commerce scenario with products, customers, and sales data that will work well for testing your natural language to SQL conversion system.

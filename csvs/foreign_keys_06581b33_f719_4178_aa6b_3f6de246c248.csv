@@ -1,0 +1,3 @@
+table_name,foreign_key,referred_table
+sales,sales_product_id_fkey,products
+sales,sales_customer_id_fkey,customers

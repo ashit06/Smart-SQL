@@ -1,0 +1,18 @@
+table_name,column_name,data_type
+products,name,character varying
+sales,product_id,integer
+customers,join_date,date
+products,stock_quantity,integer
+sales,quantity,integer
+customers,first_name,character varying
+customers,customer_id,integer
+sales,total_amount,numeric
+customers,email,character varying
+customers,last_name,character varying
+sales,region,character varying
+sales,customer_id,integer
+products,category,character varying
+sales,sale_id,integer
+products,product_id,integer
+products,price,numeric
+sales,sale_date,date
